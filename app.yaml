@@ -1,0 +1,14 @@
+application: clstff
+version: gae-run
+runtime: python
+api_version: 1
+ 
+handlers:
+- url: /_wave/verify_token
+  script: verify.py
+- url: /_wave/.*
+  script: wave.py
+- url: /assets
+  static_dir: assets
+- url: /.*
+  script: main.py

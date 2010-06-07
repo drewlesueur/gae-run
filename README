@@ -1,0 +1,8 @@
+Use gist.github.com to make little Google app engine apps
+Inspired by scriptlets
+
+example:
+http://gae-gist.latest.clstff.appspot.com/gist/425058
+based of gist http://gist.github.com/425058
+
+Currently username is hardcoded.
