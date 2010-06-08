@@ -1,0 +1,23 @@
+<w:robot xmlns:w="http://wave.google.com/extensions/robots/1.0"> 
+<w:version>0xe49de7b</w:version> 
+<w:protocolversion>0.21</w:protocolversion> 
+<w:capabilities> 
+<w:capability name="ANNOTATED_TEXT_CHANGED"/>
+<w:capability name="BLIP_CONTRIBUTORS_CHANGED"/>
+<w:capability name="BLIP_SUBMITTED"/>
+<w:capability name="DOCUMENT_CHANGED"/>
+<!--<w:capability name="EVENT"/>-->
+<w:capability name="FORM_BUTTON_CLICKED"/>
+<w:capability name="GADGET_STATE_CHANGED"/>
+<w:capability name="OPERATION_ERROR"/>
+<w:capability name="WAVELET_BLIP_CREATED"/>
+<w:capability name="WAVELET_BLIP_REMOVED"/>
+<w:capability name="WAVELET_CREATED"/>
+<w:capability name="WAVELET_FETCHED"/>
+<w:capability name="WAVELET_PARTICIPANTS_CHANGED"/>
+<w:capability name="WAVELET_SELF_ADDED"/>
+<w:capability name="WAVELET_SELF_REMOVED"/>
+<w:capability name="WAVELET_TAGS_CHANGED"/>
+<w:capability name="WAVELET_TITLE_CHANGED"/>
+</w:capabilities> 
+</w:robot> 

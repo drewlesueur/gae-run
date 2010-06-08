@@ -42,13 +42,16 @@ class Wave(webapp.RequestHandler):
         wavelet = robot.fetch_wavelet(wave_id, 'googlewave.com!conv+root')
         # robot.submit(wavelet)
         
-        self.response.out.write(wave_id + "<hr>")
-        self.response.out.write(wavelet.creator)
-        
         if wavelet.creator == "drewalex@googlewave.com":
-            for id in wavelet.blips:
-                blip = wavelet.blips[id]
-                self.response.out.write(blip.text + "<hr />")
+            code = wavelet.root_blip.text
+            code = code.split('\n')
+            code = code[2:] #remove first line
+            code = "\n".join(code)
+            compiled = compile(code, '<string>', 'exec')
+            exec compiled in {'self':self}
+#           for id in wavelet.blips:
+#               blip = wavelet.blips[id]
+#               self.response.out.write(blip.text + "<hr />")
 
         
 class Gist(webapp.RequestHandler):
