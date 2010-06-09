@@ -7,7 +7,7 @@ handlers:
 - url: /_wave/verify_token
   script: verify.py
 - url: /_wave/.*
-  script: wave3.py
+  script: wave.py
 - url: /assets
   static_dir: assets
 - url: /.*

@@ -48,10 +48,26 @@ class Wave(webapp.RequestHandler):
             code = code[2:] #remove first line
             code = "\n".join(code)
             compiled = compile(code, '<string>', 'exec')
-            exec compiled in {'self':self}
+            exec compiled in {'self':self, 'req': self.request, 'resp' : self.response, 'echo': self.response.out.write}
 #           for id in wavelet.blips:
 #               blip = wavelet.blips[id]
 #               self.response.out.write(blip.text + "<hr />")
+
+
+"""
+#progroums code
+def post(self):
+        code = self.request.params['_code'].replace("\r\n", "\n") + "\n"
+        code = "from google.appengine.api.urlfetch import fetch\n%s" % code
+        compiled = compile(code, '<string>', 'exec')
+        old_stderr, old_stdout = sys.stderr, sys.stdout
+        try:
+            sys.stderr, sys.stdout = self.response.out, self.response.out
+            exec compiled in {'req': self.request, 'resp': self.response}
+        finally:
+            sys.stderr, sys.stdout = old_stderr, old_stdout
+
+"""
 
         
 class Gist(webapp.RequestHandler):

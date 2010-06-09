@@ -5,8 +5,13 @@ import logging
 
 def OnWaveletSelfAdded(event, wavelet):
   """Invoked when the robot has been added."""
+  import urllib
   logging.info("OnWaveletSelfAdded called")
-  wavelet.reply("\nHi everybody! I'm a Python robot! " + "waveid: " + wavelet.wave_id + " waveletid: " + wavelet.wavelet_id)
+  wavelet.reply("http://clstff.appspot.com/wave/" + urllib.quote(wavelet.wave_id) + """
+  example:
+  echo("hello world") # or resp.out.write("hello")
+  q = req.get("q") # query param
+  """)
   
 def OnWaveletParticipantsChanged(event, wavelet):
   logging.info("OnParticipantsChanged called")
@@ -29,7 +34,7 @@ if __name__ == '__main__':
   myRobot = robot.Robot('gae-run', 
       image_url='http://a3.twimg.com/profile_images/250985893/twitter_pic_bigger.jpg',
       profile_url='http://clstff.appspot.com/')
-  myRobot.register_handler(events.WaveletParticipantsChanged, OnWaveletParticipantsChanged)
+  #myRobot.register_handler(events.WaveletParticipantsChanged, OnWaveletParticipantsChanged)
   myRobot.register_handler(events.WaveletSelfAdded, OnWaveletSelfAdded)
   myRobot.register_profile_handler(ProfileHandler)
   
