@@ -92,7 +92,7 @@ class Gist(webapp.RequestHandler):
         if owner == 'drewlesueur':
             code = self.get_gist(gist)
             compiled = compile(code, '<string>', 'exec')
-            exec compiled in {'self':self}
+            exec compiled in {'self':self, 'req': self.request, 'resp' : self.response, 'echo': self.response.out.write}
             
 application = webapp.WSGIApplication(
                                      [('/', MainPage), 
