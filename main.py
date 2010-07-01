@@ -11,6 +11,9 @@ class MainPage(webapp.RequestHandler):
         self.response.out.write('Hello, webapp World!')
 
 class Wave(webapp.RequestHandler):
+    def post(self, wave_id):
+        self.get(wave_id)
+        
     def get(self, wave_id):
         from waveapi import events
         from waveapi import robot
@@ -87,6 +90,9 @@ class Gist(webapp.RequestHandler):
             return owner
         return ""
     
+    def post(self, gist):
+        self.get(gist)
+        
     def get(self, gist):
         owner = self.get_gist_owner(gist)
         if owner == 'drewlesueur':
