@@ -1,8 +1,55 @@
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
-from google.appengine.api import urlfetch
 import simplejson as json
-import urllib
+import util
+
+#import urllib
+#from google.appengine.api import urlfetch
+
+import urllib, urllib2, Cookie
+from google.appengine.api import urlfetch
+
+#http://everydayscripting.blogspot.com/2009/08/google-app-engine-cookie-handling-with.html
+class URLOpener:
+  def __init__(self):
+      self.cookie = Cookie.SimpleCookie()
+    
+  def open(self, url, data = None):
+      if data is None:
+          method = urlfetch.GET
+      else:
+          method = urlfetch.POST
+    
+      while url is not None:
+          response = urlfetch.fetch(url=url,
+                          payload=data,
+                          method=method,
+                          headers=self._getHeaders(self.cookie),
+                          allow_truncated=False,
+                          follow_redirects=False,
+                          deadline=10
+                          )
+          data = None # Next request will be a get, so no need to send the data again. 
+          method = urlfetch.GET
+          self.cookie.load(response.headers.get('set-cookie', '')) # Load the cookies from the response
+          url = response.headers.get('location')
+    
+      return response
+        
+  def _getHeaders(self, cookie):
+      headers = {
+                 'Host' : 'www.google.com',
+                 'User-Agent' : 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 (.NET CLR 3.5.30729)',
+                 'Cookie' : self._makeCookieHeader(cookie)
+                  }
+      return headers
+
+  def _makeCookieHeader(self, cookie):
+      cookieHeader = ""
+      for value in cookie.values():
+          cookieHeader += "%s=%s; " % (value.key, value.value)
+      return cookieHeader
+
 
 
 class MainPage(webapp.RequestHandler):
@@ -99,11 +146,37 @@ class Gist(webapp.RequestHandler):
             code = self.get_gist(gist)
             compiled = compile(code, '<string>', 'exec')
             exec compiled in {'self':self, 'req': self.request, 'resp' : self.response, 'echo': self.response.out.write}
+
+
+class Doc(webapp.RequestHandler):
+    def get(self, url):
+        url = urllib.unquote(url)
+        opener = URLOpener()
+        result = opener.open(url)
+        
+        my_json = util.find_sandwich(result.content,'<script type="text/javascript">KX_mutations = ','; KX_modelChunkLoadStart')
+        
+        obj = json.loads(my_json)
+        
+        #self.response.out.write(obj["mutations"][0]["s"])
+        code = (obj["mutations"][0]["s"])
+        
+        #fixing the pretty quotes
+        code = code.replace(u'\u201C', '"').replace(u'\u201D','"') #replacing quotes
+        
+        author = obj["editedBy"]
+        if author != "drewalex":
+            return
+        
+        compiled = compile(code, '<string>', 'exec')
+        exec compiled in {'self':self, 'req': self.request, 'resp' : self.response, 'echo': self.response.out.write}
+
             
 application = webapp.WSGIApplication(
                                      [('/', MainPage), 
                                      (r'/gist/(.*)$',Gist),
-                                     (r'/wave/(.*)$', Wave)],
+                                     (r'/wave/(.*)$', Wave),
+                                     (r'/doc/(.*)$', Doc)],
                                      debug=True)
 
 def main():
